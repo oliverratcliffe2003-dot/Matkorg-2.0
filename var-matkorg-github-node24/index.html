@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2f5d50">
+  <meta name="description" content="Vår Matkorg – recept, favoriter och en gemensam inköpslista.">
+  <title>Vår Matkorg</title>
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#recipes">Hoppa till recepten</a>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Vår Matkorg, startsida">
+      <span class="brand-mark">VM</span>
+      <span><strong>Vår Matkorg</strong><small>Recept och inköpslista</small></span>
+    </a>
+    <div class="header-actions">
+      <button class="ghost-button" id="openEmail" type="button">✉️ Mejla lista</button>
+      <button class="cart-button" id="openCart" type="button" aria-haspopup="dialog">
+        🛒 Varukorg <span id="cartCount" class="count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">MIDDAGEN BLIR ENKLARE</p>
+        <h1>Välj recept.<br>Få en färdig inköpslista.</h1>
+        <p class="hero-copy">Lägg till maträtter, justera portionerna och skicka listan direkt till Oliver, Isabella eller båda.</p>
+        <a class="primary-link" href="#recipes">Se alla recept</a>
+      </div>
+      <div class="hero-card" aria-label="Utvalda funktioner">
+        <span>🍕 9 recept</span>
+        <span>🛒 Samlad inköpslista</span>
+        <span>❤️ Favoriter sparas</span>
+        <span>📱 Mobilanpassad</span>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="Sök och filtrera recept">
+      <label class="search-box">
+        <span aria-hidden="true">⌕</span>
+        <span class="sr-only">Sök recept</span>
+        <input id="search" type="search" placeholder="Sök recept eller ingrediens…" autocomplete="off">
+      </label>
+      <div class="filters" id="filters" role="group" aria-label="Receptfilter">
+        <button class="filter active" data-filter="alla" type="button">Alla</button>
+        <button class="filter" data-filter="favoriter" type="button">Favoriter</button>
+        <button class="filter" data-filter="Soppa" type="button">Soppor</button>
+        <button class="filter" data-filter="snabbt" type="button">Under 30 min</button>
+      </div>
+    </section>
+
+    <section class="price-note" aria-labelledby="priceNoteTitle">
+      <div>
+        <p class="eyebrow">PRISINDIKATION · GÖTEBORG</p>
+        <h2 id="priceNoteTitle">Snittpris från fyra matkedjor</h2>
+        <p>Varje ingrediens visar ett uppskattat normalpris hos Willys, ICA Maxi, Stora Coop och Hemköp. Priserna är en vägledning, inte livepriser från en enskild butik.</p>
+      </div>
+      <div class="price-note-meta">
+        <strong>Senast beräknat</strong>
+        <span id="priceDate">20 juli 2026</span>
+        <a href="README.md#prisuppgifter">Läs om metoden</a>
+      </div>
+    </section>
+
+    <section class="recipe-section" id="recipes" aria-labelledby="recipeHeading">
+      <div class="section-heading">
+        <div><p class="eyebrow">RECEPT</p><h2 id="recipeHeading">Vad är ni sugna på?</h2></div>
+        <p id="resultCount" aria-live="polite"></p>
+      </div>
+      <div class="recipe-grid" id="recipeGrid"></div>
+      <div class="empty-search hidden" id="emptySearch">Inga recept matchade sökningen.</div>
+    </section>
+  </main>
+
+  <footer>
+    <strong>Vår Matkorg</strong>
+    <span>Byggd för GitHub Pages.</span>
+  </footer>
+
+  <div class="overlay" id="cartOverlay" aria-hidden="true">
+    <button class="overlay-backdrop" data-close-cart aria-label="Stäng varukorgen"></button>
+    <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+      <div class="drawer-header">
+        <div><p class="eyebrow">PLANERING</p><h2 id="cartTitle">Din varukorg</h2></div>
+        <button class="icon-button" data-close-cart type="button" aria-label="Stäng">×</button>
+      </div>
+
+      <div id="emptyCart" class="empty-cart">
+        <div class="empty-icon">🛒</div>
+        <h3>Varukorgen är tom</h3>
+        <p>Lägg till ett recept så skapas inköpslistan automatiskt.</p>
+      </div>
+
+      <div id="cartContent" class="hidden">
+        <section class="drawer-section">
+          <div class="drawer-section-title"><h3>Maträtter</h3><button id="clearCart" class="text-button" type="button">Töm allt</button></div>
+          <div id="cartMeals"></div>
+        </section>
+        <section class="drawer-section">
+          <div class="drawer-section-title"><h3>Inköpslista</h3><span id="itemCount"></span></div>
+          <p class="drawer-help">Markera sådant ni redan har hemma.</p>
+          <div id="shoppingList"></div>
+          <div class="basket-price-summary" id="basketPriceSummary"></div>
+        </section>
+      </div>
+
+      <section class="share-box" id="emailSection">
+        <p class="eyebrow">SKICKA DIREKT FRÅN SIDAN</p>
+        <h3>Mejla inköpslistan</h3>
+        <p>FormSubmit används på samma sätt som tidigare. Första gången kan mottagaren behöva godkänna ett aktiveringsmejl.</p>
+        <div class="email-buttons">
+          <button id="emailOliver" class="primary-button" type="button">Till Oliver</button>
+          <button id="emailIsabella" class="secondary-button" type="button">Till Isabella</button>
+          <button id="emailBoth" class="secondary-button wide" type="button">Till båda</button>
+        </div>
+        <p class="send-status" id="sendStatus" aria-live="polite"></p>
+        <div class="utility-buttons">
+          <button id="copyList" type="button">Kopiera lista</button>
+          <button id="copyShareLink" type="button">Kopiera delningslänk</button>
+          <button id="printList" type="button">Skriv ut</button>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <div class="overlay modal-overlay" id="recipeOverlay" aria-hidden="true">
+    <button class="overlay-backdrop" data-close-recipe aria-label="Stäng receptet"></button>
+    <article class="recipe-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="icon-button modal-close" data-close-recipe type="button" aria-label="Stäng">×</button>
+      <img id="modalImage" src="" alt="">
+      <div class="modal-body">
+        <p class="eyebrow" id="modalTag"></p>
+        <h2 id="modalTitle"></h2>
+        <p id="modalDescription" class="modal-description"></p>
+        <div class="modal-columns">
+          <section><h3>Ingredienser <small id="modalServingLabel"></small></h3><ul id="modalIngredients"></ul><p class="basics" id="modalBasics"></p></section>
+          <section><h3>Gör så här</h3><ol id="modalSteps"></ol></section>
+        </div>
+        <p class="photo-credit" id="modalCredit"></p>
+        <div class="modal-actions"><button id="modalAdd" class="primary-button" type="button">Lägg till 2 portioner</button></div>
+      </div>
+    </article>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="price-data.js"></script>
+  <script src="recipes.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
